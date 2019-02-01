@@ -30,15 +30,20 @@ function shuffle(array) {
  * set up the event listener for a card. If a card is clicked:
  */
 const anyCard = document.querySelectorAll('.card');
-const openCards = [];
+var openCards = [];
 
-anyCard.forEach( function(card) {
+anyCard.forEach(function(card) {
     card.addEventListener('click', function(openMax2) {
-        if (openCards.length >= 2) {
-            // hide 
-        } else {
-            openCards.push(card);
-            card.classList.add('open', 'show');
+        openCards.push(card);
+        card.classList.add('open', 'show');
+        console.log('Open cards:', openCards.length);
+        if (openCards.length == 2) {
+            setTimeout(function() {
+                openCards.forEach(function(card) {
+                    card.classList.remove('open', 'show');
+                });
+            }, 1000); 
+            openCards = [];
         }
     })
 })
