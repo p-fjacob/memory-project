@@ -29,7 +29,13 @@ function shuffle(array) {
 /*
  * set up the event listener for a card. If a card is clicked:
  */
+const anyCard = document.querySelectorAll('.card');
 
+anyCard.forEach( function(card) {
+    card.addEventListener('click', function(event) {
+        card.classList.add('open', 'show');
+    })
+})
 
  /*
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -40,10 +46,3 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-
- /* test event, just to get the clue, need to be deleted before submission */
-
- document.addEventListener('click', function() {
-     const luigi = document.querySelector('h1');
-     luigi.style.backgroundColor = 'red';
- })
