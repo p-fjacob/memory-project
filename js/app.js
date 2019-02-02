@@ -13,7 +13,7 @@ function builtCard(card) {
     return '<li class="card"><i class="fa ${card}"></i></li>';
 }
 
-// Display the cards on the page
+// Prepare the game, display the cards on the page
 
 function prepareGame() {
     let deck = document.querySelector('.deck');
@@ -43,6 +43,12 @@ function shuffle(array) {
     }
 
     return array;
+}
+
+// Timer function
+
+function takeTime() {
+
 }
 
 // set up the event listener for a card. If a card is clicked:
