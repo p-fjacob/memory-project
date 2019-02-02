@@ -1,7 +1,7 @@
 /*
  * Create a list that holds all of your cards
  */
-/* var array = [card1, card2, card3, card4];*/
+let array = [];
 
 /*
  * Display the cards on the page
@@ -29,8 +29,8 @@ function shuffle(array) {
 /*
  * set up the event listener for a card. If a card is clicked:
  */
-const anyCard = document.querySelectorAll('.card');
-var openCards = [];
+let anyCard = document.querySelectorAll('.card');
+let openCards = [];
 
 anyCard.forEach(function(card) {
     card.addEventListener('click', function(openMax2) {
@@ -41,12 +41,12 @@ anyCard.forEach(function(card) {
             setTimeout(function() {
                 openCards.forEach(function(card) {
                     card.classList.remove('open', 'show');
+                    openCards = [];
                 });
             }, 1000); 
-            openCards = [];
         }
-    })
-})
+    });
+});
 
  /*
  *  - display the card's symbol (put this functionality in another function that you call from this one)
