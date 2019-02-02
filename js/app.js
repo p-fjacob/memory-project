@@ -9,10 +9,21 @@ let setOfCards = ['fa-diamond', 'fa-diamond',
              'fa-bicycle', 'fa-bicycle',
              'fa-bomb', 'fa-bomb'];
 
+function builtCard(card) {
+    return '<li class="card"><i class="fa ${card}"></i></li>';
+}
+
 // Display the cards on the page
 
-let deck = document.querySelector('.deck');
-deck.innerHTML = '<li class="card"><i class="fa fa-diamond"></i></li>';
+function prepareGame() {
+    let deck = document.querySelector('.deck');
+    let cardDescription = setOfCards.map(function(card) {
+        return builtCard(card);
+    });
+        deck.innerHTML = cardDescription.join('');
+}
+
+prepareGame();
 
 /*   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
@@ -32,12 +43,6 @@ function shuffle(array) {
     }
 
     return array;
-}
-
-// prepare the game and initialize it
-
-function prepareGame() {
-
 }
 
 // set up the event listener for a card. If a card is clicked:
