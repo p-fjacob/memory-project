@@ -34,9 +34,22 @@ let openCards = [];
 
 anyCard.forEach(function(card) {
     card.addEventListener('click', function(openMax2) {
+
+        /* block clicking an open card twice */ 
+
+        if (!card.classList.contains('open') || !card.classList.contains('show'))
+
+        /* write open cards into array 'openCards' */
+
         openCards.push(card);
+
+        /* flip not more than two cards */
+
         card.classList.add('open', 'show');
         console.log('Open cards:', openCards.length);
+
+        /* make open cards flip back after timeout */
+        
         if (openCards.length == 2) {
             setTimeout(function() {
                 openCards.forEach(function(card) {
