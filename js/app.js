@@ -13,7 +13,7 @@ function builtCard(card) {
     return '<li class="card"><i class="fa ${card}"></i></li>';
 }
 
-// Prepare the game, display the cards on the page
+// Prepare the game, shuffle cards, display the cards on the page
 
 function prepareGame() {
     let deck = document.querySelector('.deck');
@@ -24,11 +24,6 @@ function prepareGame() {
 }
 
 prepareGame();
-
-/*   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
