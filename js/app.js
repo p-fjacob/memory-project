@@ -17,7 +17,7 @@ function builtCard(card) {
 
 function prepareGame() {
     let deck = document.querySelector('.deck');
-    let cardDescription = setOfCards.map(function(card) {
+    let cardDescription = shuffle(setOfCards).map(function(card) {
         return builtCard(card);
     });
         deck.innerHTML = cardDescription.join('');
@@ -55,9 +55,13 @@ function takeTime() {
 
 let anyCard = document.querySelectorAll('.card');
 let openCards = [];
+let moveCounter = 0;
 
 anyCard.forEach(function(card) {
     card.addEventListener('click', function(openMax2) {
+
+        moveCounter = moveCounter+1;
+        console.log(moveCounter);
 
         // block clicking an open card twice 
 
