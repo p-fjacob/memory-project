@@ -9,9 +9,12 @@ let setOfCards = ['fa-diamond', 'fa-diamond',
              'fa-bicycle', 'fa-bicycle',
              'fa-bomb', 'fa-bomb'];
 
+
+
 function builtCard(card) {
-    return '<li class="card"><i class="fa ${card}"></i></li>';
+    return `<li class="card"><i class="fa ${card}"></i></li>`;
 }
+
 
 // Prepare the game, shuffle cards, display the cards on the page
 
@@ -24,6 +27,7 @@ function prepareGame() {
 }
 
 prepareGame();
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
