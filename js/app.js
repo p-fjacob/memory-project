@@ -55,6 +55,7 @@ function takeTime() {
 let anyCard = document.querySelectorAll('.card');
 let moves = document.querySelector('.moves');
 let openCards = [];
+let matchedCards = [];
 let moveCounter = 0;
 
 anyCard.forEach(function(card) {
@@ -77,6 +78,21 @@ anyCard.forEach(function(card) {
 
         card.classList.add('open', 'show');
         console.log('Open cards:', openCards.length);
+        console.log(openCards[0]);
+        console.log(openCards[1]);
+
+let firstMatch = openCards[0];
+let secondMatch = openCards[1];
+
+        console.log(firstMatch);
+        console.log(secondMatch);
+
+        // see if cards match
+
+        if (firstMatch  == secondMatch) {
+            matchedCards.push(firstMatched, secondMatched);
+            console.log(matchedCards.length);
+        }
 
         // make open cards flip back after timeout 
 
@@ -92,10 +108,10 @@ anyCard.forEach(function(card) {
     });
 });
 
+
+
  /*
- *  - display the card's symbol (put this functionality in another function that you call from this one)
  *  - if the list already has another card, check to see if the two cards match
  *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
