@@ -29,10 +29,10 @@ function prepareGame() {
     
   let anyCard = document.querySelectorAll('.card');
 
-  // set up the event listener for a card. If a card is clicked:
+  // Set up the event listener for a card. If a card is clicked:
   anyCard.forEach(function(card) {
     card.addEventListener('click', function() {
-      // block clicking an open card twice 
+      // Block clicking an open card twice 
       if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
         playCard(card);
       }
@@ -55,6 +55,7 @@ function shuffle(array) {
     return array;
 }
 
+// Move counter settings
 function setMoveCounter(count) {
   moveCounter = count;
   moves.innerText = moveCounter;
@@ -62,7 +63,7 @@ function setMoveCounter(count) {
 }
 
 function playCard(card) {
-  // flip not more than two cards
+  // Flip not more than two cards
   // Return early if enough cards have already been selected
   if (openCards.length === 2) {
     return;
@@ -72,11 +73,11 @@ function playCard(card) {
 
   setMoveCounter(moveCounter + 1);
 
-  // write open cards into array 'openCards'
+  // Write open cards into array 'openCards'
   openCards.push(card);
   
   if (openCards.length === 1) {
-    // not enough cards played
+    // Not enough cards played
     return;
   }
 
@@ -85,16 +86,16 @@ function playCard(card) {
   console.log(firstMatch);
   console.log(secondMatch);
 
-  // see if cards match
+  // See if cards match
 
   if (firstMatch === secondMatch) {
     openCards = [];
     matchedCards.push(firstMatch, secondMatch);
     console.log(matchedCards.length);
-    // check if we finished
+    // Check if all cards are flipped over
     checkGameFinished();
   } else {
-    // make open cards flip back after timeout 
+    // Make open cards flip back after timeout 
     setTimeout(function() {
       openCards.forEach(resetCard);
       openCards = [];
@@ -102,22 +103,29 @@ function playCard(card) {
   }
 }
 
+// Scoreboard
+
+for(let i=0; i<matchedCards.lenght / 2; i++) {
+  let scoreBoard = document.querySelector('.stars');
+  scoreBoard.innerHTML('<li><i class="fa fa-star"></i></li>');
+}
+
 function resetCard(card) {
-  card.classList.remove('open', 'show', 'mactch');
+  card.classList.remove('open', 'show', 'match');
 }
 
 function checkGameFinished() {
   if (matchedCards.length === setOfCards.length) {
-    // use a timeout to ensure all cards are rendered before the alert
+    // Use a timeout to ensure all cards are rendered before the alert
     setTimeout(function() {
       alert("You won!");
     }, 300);
   }
 }
 
-// finally start the game
+// Finally re-start the game
 prepareGame();
 
-// add the prepareGame function to the reset button click
+// Add the prepareGame function to the reset button click
 resetButton.addEventListener('click', prepareGame);
 
