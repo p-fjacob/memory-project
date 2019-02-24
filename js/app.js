@@ -1,5 +1,4 @@
 // Create a list that holds all of your cards
- 
 let setOfCards = ['fa-diamond', 'fa-diamond',
              'fa-paper-plane-o', 'fa-paper-plane-o',
              'fa-anchor', 'fa-anchor',
@@ -9,25 +8,37 @@ let setOfCards = ['fa-diamond', 'fa-diamond',
              'fa-bicycle', 'fa-bicycle',
              'fa-bomb', 'fa-bomb'];
 
+let moves = document.querySelector('.moves');
+let resetButton = document.querySelector('.restart');
 
+let openCards = [];
+let matchedCards = [];
+let moveCounter = 0;
 
-function builtCard(card) {
-    return `<li class="card"><i class="fa ${card}"></i></li>`;
+function buildCard(card) {
+    return `<li class="card" title="${card}"><i class="fa ${card}"></i></li>`;
 }
-
 
 // Prepare the game, shuffle cards, display the cards on the page
-
 function prepareGame() {
-    let deck = document.querySelector('.deck');
-    let cardDescription = shuffle(setOfCards).map(function(card) {
-        return builtCard(card);
-    });
-        deck.innerHTML = cardDescription.join('');
+  let deck = document.querySelector('.deck');
+  let cardDescription = shuffle(setOfCards).map(buildCard);
+  deck.innerHTML = cardDescription.join('');
+  matchedCards = [];
+  setMoveCounter(0);
+    
+  let anyCard = document.querySelectorAll('.card');
+
+  // set up the event listener for a card. If a card is clicked:
+  anyCard.forEach(function(card) {
+    card.addEventListener('click', function() {
+      // block clicking an open card twice 
+      if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
+        playCard(card);
+      }
+    })
+  })
 }
-
-prepareGame();
-
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -44,74 +55,69 @@ function shuffle(array) {
     return array;
 }
 
-// Timer function
-
-function takeTime() {
-
+function setMoveCounter(count) {
+  moveCounter = count;
+  moves.innerText = moveCounter;
+  console.log(moveCounter);
 }
 
-// set up the event listener for a card. If a card is clicked:
+function playCard(card) {
+  // flip not more than two cards
+  // Return early if enough cards have already been selected
+  if (openCards.length === 2) {
+    return;
+  }
+  
+  card.classList.add('open', 'show');
 
-let anyCard = document.querySelectorAll('.card');
-let moves = document.querySelector('.moves');
-let openCards = [];
-let matchedCards = [];
-let moveCounter = 0;
+  setMoveCounter(moveCounter + 1);
 
-anyCard.forEach(function(card) {
-    card.addEventListener('click', function(openMax2) {
+  // write open cards into array 'openCards'
+  openCards.push(card);
+  
+  if (openCards.length === 1) {
+    // not enough cards played
+    return;
+  }
 
-            moveCounter = moveCounter+1;
-            moves.innerText = moveCounter;
-            console.log(moveCounter);
+  let firstMatch = openCards[0].getAttribute('title');
+  let secondMatch = openCards[1].getAttribute('title');
+  console.log(firstMatch);
+  console.log(secondMatch);
 
+  // see if cards match
 
-        // block clicking an open card twice 
+  if (firstMatch === secondMatch) {
+    openCards = [];
+    matchedCards.push(firstMatch, secondMatch);
+    console.log(matchedCards.length);
+    // check if we finished
+    checkGameFinished();
+  } else {
+    // make open cards flip back after timeout 
+    setTimeout(function() {
+      openCards.forEach(resetCard);
+      openCards = [];
+    }, 1000);
+  }
+}
 
-        if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
+function resetCard(card) {
+  card.classList.remove('open', 'show', 'mactch');
+}
 
-        // write open cards into array 'openCards'
+function checkGameFinished() {
+  if (matchedCards.length === setOfCards.length) {
+    // use a timeout to ensure all cards are rendered before the alert
+    setTimeout(function() {
+      alert("You won!");
+    }, 300);
+  }
+}
 
-        openCards.push(card);
+// finally start the game
+prepareGame();
 
-        // flip not more than two cards
+// add the prepareGame function to the reset button click
+resetButton.addEventListener('click', prepareGame);
 
-        card.classList.add('open', 'show');
-        console.log('Open cards:', openCards.length);
-        console.log(openCards[0]);
-        console.log(openCards[1]);
-
-let firstMatch = openCards[0];
-let secondMatch = openCards[1];
-
-        console.log(firstMatch);
-        console.log(secondMatch);
-
-        // see if cards match
-
-        if (firstMatch  == secondMatch) {
-            matchedCards.push(firstMatched, secondMatched);
-            console.log(matchedCards.length);
-        }
-
-        // make open cards flip back after timeout 
-
-            if (openCards.length == 2) {
-                setTimeout(function() {
-                    openCards.forEach(function(card) {
-                        card.classList.remove('open', 'show');
-                        openCards = [];
-                    });
-                }, 1000); 
-            }
-        }
-    });
-});
-
-
-
- /*
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
