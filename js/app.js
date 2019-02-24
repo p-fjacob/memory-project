@@ -10,13 +10,20 @@ let setOfCards = ['fa-diamond', 'fa-diamond',
 
 let moves = document.querySelector('.moves');
 let resetButton = document.querySelector('.restart');
-
+let score = document.querySelector('.stars')
 let openCards = [];
 let matchedCards = [];
 let moveCounter = 0;
 
 function buildCard(card) {
     return `<li class="card" title="${card}"><i class="fa ${card}"></i></li>`;
+}
+
+function setScore(count) {
+  let stars = new Array(count).fill(0).map(function() {
+    return '<li><i class="fa fa-star"></i></li>'
+  }).join('');
+  score.innerHTML = stars;
 }
 
 // Prepare the game, shuffle cards, display the cards on the page
@@ -26,6 +33,7 @@ function prepareGame() {
   deck.innerHTML = cardDescription.join('');
   matchedCards = [];
   setMoveCounter(0);
+  setScore(0);
     
   let anyCard = document.querySelectorAll('.card');
 
@@ -62,14 +70,6 @@ function setMoveCounter(count) {
   console.log(moveCounter);
 }
 
-// Scoreboard
-
-for(let i=0; i<matchedCards.lenght; i++) {
-  let scoreBoard = document.querySelector('.stars');
-  scoreBoard.innerHTML = '<li><i class="fa fa-star"></i></li>';
-  console.log(matchedCards.length / 2);
-}
-
 function playCard(card) {
   // Flip not more than two cards
   // Return early if enough cards have already been selected
@@ -100,6 +100,7 @@ function playCard(card) {
     openCards = [];
     matchedCards.push(firstMatch, secondMatch);
     console.log(matchedCards.length);
+    setScore(matchedCards.length / 2);
     // Check if all cards are flipped over
     checkGameFinished();
   } else {
