@@ -62,6 +62,14 @@ function setMoveCounter(count) {
   console.log(moveCounter);
 }
 
+// Scoreboard
+
+for(let i=0; i<matchedCards.lenght; i++) {
+  let scoreBoard = document.querySelector('.stars');
+  scoreBoard.innerHTML = '<li><i class="fa fa-star"></i></li>';
+  console.log(matchedCards.length / 2);
+}
+
 function playCard(card) {
   // Flip not more than two cards
   // Return early if enough cards have already been selected
@@ -101,13 +109,6 @@ function playCard(card) {
       openCards = [];
     }, 1000);
   }
-}
-
-// Scoreboard
-
-for(let i=0; i<matchedCards.lenght / 2; i++) {
-  let scoreBoard = document.querySelector('.stars');
-  scoreBoard.innerHTML('<li><i class="fa fa-star"></i></li>');
 }
 
 function resetCard(card) {
