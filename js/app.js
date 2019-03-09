@@ -62,10 +62,10 @@ function buildCard(card) {
 
 function buildScore(moves) {
   let count = 3;
-  if (moves >= 20) {
+  if (moves >= 15) {
     count = 2;
   }
-  if (moves >= 30) {
+  if (moves >= 20) {
     count = 1;
   }
   return new Array(count).fill('<li><i class="fa fa-star"></i></li>').join('');
