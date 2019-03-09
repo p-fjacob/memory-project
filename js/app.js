@@ -10,43 +10,138 @@ let setOfCards = ['fa-diamond', 'fa-diamond',
 
 let moves = document.querySelector('.moves');
 let resetButton = document.querySelector('.restart');
-let score = document.querySelector('.stars')
+let score = document.querySelector('.stars');
+let time = document.querySelector('.time');
+let winScreen = document.querySelector('.win-screen');
+
+
 let openCards = [];
-let matchedCards = [];
+let matchedCards = 0;
 let moveCounter = 0;
 
+/* Timer */
+let timer = null;
+let startTime = null;
+
+function startTimer() {
+  // Skip starting the timer, if it was already set
+  if(timer) {
+    return;
+  }
+  resetTimer();
+  renderCurrentTime();
+  timer = setInterval(renderCurrentTime, 1000);
+}
+
+function stopTimer() {
+  getGameDuration()
+  clearInterval(timer);
+  timer = null;
+  renderCurrentTime();
+}
+
+function resetTimer() {
+  stopTimer();
+  startTime = Date.now();
+  renderCurrentTime();
+}
+
+function getGameDuration() {
+  return parseInt((Date.now() - startTime) / 1000);
+}
+
+function renderCurrentTime() {
+  time.innerHTML = `${getGameDuration()} s`;
+}
+
+/* HTML templating functions */
 function buildCard(card) {
-    return `<li class="card" title="${card}"><i class="fa ${card}"></i></li>`;
+  return `<li class="card" title="${card}"><i class="fa ${card}"></i></li>`;
 }
 
-function setScore(count) {
-  let stars = new Array(count).fill(0).map(function() {
-    return '<li><i class="fa fa-star"></i></li>'
-  }).join('');
-  score.innerHTML = stars;
+function buildScore(moves) {
+  let count = 3;
+  if (moves >= 20) {
+    count = 2;
+  }
+  if (moves >= 30) {
+    count = 1;
+  }
+  return new Array(count).fill('<li><i class="fa fa-star"></i></li>').join('');
 }
 
+/* Rendering Functions */
+
+function renderScore(moves) {
+  score.innerHTML = buildScore(moves);
+}
+
+function renderMoves(count) {
+  moves.innerText = `${count} Moves`;
+}
+
+function renderWinScreen() {
+  winScreen.innerHTML = `
+    <div>
+      <h1>You won!</h1>
+      <span>You mastered the game in ${getGameDuration()} seconds with ${moveCounter} moves, deserving <ul class="stars">${buildScore(moveCounter)}</ul></span>
+    </div>
+  `;
+  winScreen.classList.add('show')
+}
+
+function hideWinScreen() {
+  winScreen.classList.remove('show');
+}
+
+/* Setting Data Function */
+function setMoves(count) {
+  moveCounter = count;
+  renderMoves(count)
+  renderScore(count);
+}
+
+/* EventListener Helpers */
+function eventListenerFor(card) {
+  return function () {
+    // Block clicking an open card twice 
+    if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
+      playCard(card);
+    }
+  }
+}
+
+/* Game Functions */
 // Prepare the game, shuffle cards, display the cards on the page
 function prepareGame() {
-  let deck = document.querySelector('.deck');
-  let cardDescription = shuffle(setOfCards).map(buildCard);
-  deck.innerHTML = cardDescription.join('');
-  matchedCards = [];
-  setMoveCounter(0);
-  setScore(0);
-    
-  let anyCard = document.querySelectorAll('.card');
+  resetTimer();
+  hideWinScreen();
+  setMoves(0);
+  matchedCards = 0;
 
+  let deck = document.querySelector('.deck');
+  deck.classList.remove('animated');
+  deck.innerHTML = shuffle(setOfCards).map(buildCard).join('');
+    
   // Set up the event listener for a card. If a card is clicked:
-  anyCard.forEach(function(card) {
-    card.addEventListener('click', function() {
-      // Block clicking an open card twice 
-      if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
-        playCard(card);
-      }
-    })
-  })
+  let allCards = document.querySelectorAll('.card');
+  allCards.forEach(function(card) {
+    card.addEventListener('click', eventListenerFor(card))
+  });
+  // Add the transition animations to the cards after they have been rendered
+  setTimeout(function() {
+    deck.classList.add('animated');
+  }, 0);
 }
+
+function endGame() {
+  // stop Timer
+  stopTimer();
+  // show win div
+  renderWinScreen();
+}
+
+/* Utility Functions */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -63,23 +158,20 @@ function shuffle(array) {
     return array;
 }
 
-// Move counter settings
-function setMoveCounter(count) {
-  moveCounter = count;
-  moves.innerText = moveCounter;
-  console.log(moveCounter);
-}
-
+/* Handle playing a card */
 function playCard(card) {
+  startTimer();
   // Flip not more than two cards
   // Return early if enough cards have already been selected
   if (openCards.length === 2) {
     return;
   }
   
-  card.classList.add('open', 'show');
-
-  setMoveCounter(moveCounter + 1);
+  card.classList.add('open');
+  // Synchronise with the CSS animation
+  setTimeout(function() {
+    card.classList.add('show');
+  }, 200);
 
   // Write open cards into array 'openCards'
   openCards.push(card);
@@ -89,45 +181,54 @@ function playCard(card) {
     return;
   }
 
-  let firstMatch = openCards[0].getAttribute('title');
-  let secondMatch = openCards[1].getAttribute('title');
-  console.log(firstMatch);
-  console.log(secondMatch);
+  setMoves(moveCounter + 1);
 
   // See if cards match
-
-  if (firstMatch === secondMatch) {
-    openCards = [];
-    matchedCards.push(firstMatch, secondMatch);
-    console.log(matchedCards.length);
-    setScore(matchedCards.length / 2);
-    // Check if all cards are flipped over
-    checkGameFinished();
+  if (cardsMatch(openCards)) {
+    onMatchedCards();
   } else {
     // Make open cards flip back after timeout 
-    setTimeout(function() {
-      openCards.forEach(resetCard);
-      openCards = [];
-    }, 1000);
+    setTimeout(resetCards, 1000);
   }
+}
+
+function cardsMatch(cards) {
+  return cards[0].getAttribute('title') === cards[1].getAttribute('title');
+}
+
+function onMatchedCards() {
+  matchedCards = matchedCards + 2;
+  openCards.forEach(function (card) {
+    setTimeout(function() {
+      card.classList.add('match');
+    }, 200);
+  });
+  openCards = [];
+  // Check if all cards are flipped over
+  if (matchedCards === setOfCards.length) {
+    endGame();
+  }
+}
+
+function resetCards() {
+  openCards.forEach(resetCard);
+  openCards = [];
 }
 
 function resetCard(card) {
-  card.classList.remove('open', 'show', 'match');
-}
+  card.classList.remove('open');
+  // Synchronise with the CSS animation
+  setTimeout(function () {
+    card.classList.remove('show');
+  }, 150);
 
-function checkGameFinished() {
-  if (matchedCards.length === setOfCards.length) {
-    // Use a timeout to ensure all cards are rendered before the alert
-    setTimeout(function() {
-      alert("You won!");
-    }, 300);
-  }
 }
-
-// Finally re-start the game
-prepareGame();
 
 // Add the prepareGame function to the reset button click
 resetButton.addEventListener('click', prepareGame);
 
+// Hide the Win screen on click
+winScreen.addEventListener('click', prepareGame);
+
+// Finally re-start the game
+prepareGame();

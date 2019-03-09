@@ -17,7 +17,7 @@ body {
 }
 
 body {
-    background: #ffffff; 
+    background: #ffffff;
     font-family: 'Coda', cursive;
 }
 
@@ -26,6 +26,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    padding: 10px;
 }
 
 h1 {
@@ -38,25 +39,23 @@ h1 {
  */
 
 .deck {
-    width: 660px;
-    min-height: 680px;
+    width: 600px;
+    min-height: 600px;
+    padding: 7px;
     background: linear-gradient(160deg, #fad502 0%, #f78504 100%);
-    padding: 32px;
     border-radius: 10px;
     box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
-    margin: 0 0 3em;
 }
 
 .deck .card {
-    height: 125px;
-    width: 125px;
+    flex: calc(25% - 10px);
+    margin: 5px;
+    transform: rotateY(180deg);
     background: #2e3d49;
-    font-size: 0;
-    color: #ffffff;
+    color: transparent;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
@@ -65,20 +64,29 @@ h1 {
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
 }
 
+/* Keep the cards all the same height */
+.deck .card i {
+    font-size: 32px;
+    line-height: 0;
+}
+
+.deck.animated .card {
+    transition: transform .5s, background-color .1s;
+}
+
 .deck .card.open {
-    transform: rotateY(0);
-    background: #02b3e4;
+    transform: rotateY(0deg);
     cursor: default;
 }
 
 .deck .card.show {
-    font-size: 33px;
+    background: #02b3e4;
+    color: #ffffff;
 }
 
 .deck .card.match {
     cursor: default;
     background: #02ccba;
-    font-size: 33px;
 }
 
 /*
@@ -98,7 +106,7 @@ h1 {
     margin: 0 5px 0 0;
 }
 
-.score-panel .stars li {
+.stars li {
     list-style: none;
     display: inline-block;
 }
@@ -106,4 +114,38 @@ h1 {
 .score-panel .restart {
     float: right;
     cursor: pointer;
+}
+
+/* Win Panel */
+.win-screen {
+    background-color: rgba(73, 69, 46, 0.5);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    visibility: hidden;
+}
+
+.win-screen.show {
+    visibility: visible;
+}
+
+.win-screen > * {
+    width: 50vw;
+    padding: 1rem;
+    padding-bottom: 3rem;
+    background-color: white;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .deck {
+        max-width: calc(100vw - 14px);
+        min-height: calc(100vw - 14px);
+    }
 }
