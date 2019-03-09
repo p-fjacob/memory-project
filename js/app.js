@@ -1,13 +1,14 @@
 // Create a list that holds all of your cards
-let setOfCards = ['fa-diamond', 'fa-diamond',
-             'fa-paper-plane-o', 'fa-paper-plane-o',
-             'fa-anchor', 'fa-anchor',
-             'fa-bolt', 'fa-bolt',
-             'fa-cube', 'fa-cube',
-             'fa-leaf', 'fa-leaf',
-             'fa-bicycle', 'fa-bicycle',
-             'fa-bomb', 'fa-bomb'];
+let singleSetOfCards = ['fa-diamond',
+             'fa-paper-plane-o',
+             'fa-anchor',
+             'fa-bolt',
+             'fa-cube',
+             'fa-leaf',
+             'fa-bicycle',
+             'fa-bomb'];
 
+let setOfCards = singleSetOfCards.concat(singleSetOfCards); 
 let moves = document.querySelector('.moves');
 let resetButton = document.querySelector('.restart');
 let score = document.querySelector('.stars');
@@ -105,7 +106,9 @@ function setMoves(count) {
 function eventListenerFor(card) {
   return function () {
     // Block clicking an open card twice 
-    if (!card.classList.contains('open') && !card.classList.contains('show') && !card.classList.contains('match')) {
+    if (!card.classList.contains('open') 
+    && !card.classList.contains('show') 
+    && !card.classList.contains('match')) {
       playCard(card);
     }
   }
