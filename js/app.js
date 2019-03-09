@@ -83,7 +83,7 @@ function renderMoves(count) {
 function renderWinScreen() {
   winScreen.innerHTML = `
     <div>
-      <h1>You won!</h1>
+      <h1>Congratulations, you won! How about an other try?</h1>
       <span>You mastered the game in ${getGameDuration()} seconds with ${moveCounter} moves, deserving <ul class="stars">${buildScore(moveCounter)}</ul></span>
     </div>
   `;
